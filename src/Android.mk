@@ -15,7 +15,7 @@
 LOCAL_PATH := $(call my-dir)
 
 
-# cmsdk-api-coverage java library
+# lineage-sdk-api-coverage java library
 # ============================================================
 include $(CLEAR_VARS)
 
@@ -23,7 +23,7 @@ LOCAL_SRC_FILES := $(call all-subdir-java-files)
 LOCAL_JAVA_RESOURCE_DIRS := res 
 LOCAL_JAR_MANIFEST := MANIFEST.mf
 
-LOCAL_MODULE := cmsdk-api-coverage
+LOCAL_MODULE := lineage-sdk-api-coverage
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_HOST_JAVA_LIBRARY)

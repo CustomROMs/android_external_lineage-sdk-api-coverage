@@ -53,7 +53,7 @@ public class CtsApiCoverage {
     private static final int FORMAT_HTML = 2;
 
     private static void printUsage() {
-        System.out.println("Usage: cmsdk-api-coverage [OPTION]... [APK]...");
+        System.out.println("Usage: lineage-sdk-api-coverage [OPTION]... [APK]...");
         System.out.println();
         System.out.println("Generates a report about what Android framework methods are called ");
         System.out.println("from the given APKs.");
@@ -70,7 +70,7 @@ public class CtsApiCoverage {
         System.out.println("  -a PATH                path to the API XML file");
         System.out.println("  -p PACKAGENAMEPREFIX   report coverage only for package that start with");
         System.out.println("  -t TITLE               report title");
-        System.out.println("  -cm CYANOGENMOD        include cyanogenmod classes");
+        System.out.println("  -l LINEAGEOS           include lineageos classes");
         System.out.println();
         System.exit(1);
     }
@@ -82,8 +82,8 @@ public class CtsApiCoverage {
         String dexDeps = "dexDeps";
         String apiXmlPath = "";
         PackageFilter packageFilter = new PackageFilter();
-        String reportTitle = "CMSDK API Coverage";
-        boolean includeCMClasses = false;
+        String reportTitle = "Lineage SDK API Coverage";
+        boolean includeLineageClasses = false;
 
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("-")) {
@@ -108,8 +108,8 @@ public class CtsApiCoverage {
                     packageFilter.addPrefixToFilter(getExpectedArg(args, ++i));
                 } else if ("-t".equals(args[i])) {
                     reportTitle = getExpectedArg(args, ++i);
-                } else if ("-cm".equals(args[i])) {
-                    includeCMClasses = true;
+                } else if ("-l".equals(args[i])) {
+                    includeLineageClasses = true;
                 } else {
                     printUsage();
                 }
@@ -138,7 +138,7 @@ public class CtsApiCoverage {
         // Add superclass information into api coverage.
         apiCoverage.resolveSuperClasses();
         for (File testApk : testApks) {
-            addApiCoverage(apiCoverage, testApk, dexDeps, includeCMClasses);
+            addApiCoverage(apiCoverage, testApk, dexDeps, includeLineageClasses);
         }
         outputCoverageReport(apiCoverage, testApks, outputFile, format, packageFilter, reportTitle);
     }
@@ -189,15 +189,15 @@ public class CtsApiCoverage {
      * @param testApk containing the tests that will be scanned by dexdeps
      */
     private static void addApiCoverage(ApiCoverage apiCoverage, File testApk, String dexdeps,
-            boolean includeCmClasses) throws SAXException, IOException {
+            boolean includeLineageClasses) throws SAXException, IOException {
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         DexDepsXmlHandler dexDepsXmlHandler = new DexDepsXmlHandler(apiCoverage);
         xmlReader.setContentHandler(dexDepsXmlHandler);
 
         String apkPath = testApk.getPath();
         Process process;
-        if (includeCmClasses) {
-            process = new ProcessBuilder(dexdeps, "--format=xml", "--include-cm-classes",
+        if (includeLineageClasses) {
+            process = new ProcessBuilder(dexdeps, "--format=xml", "--include-lineage-classes",
                     apkPath).start();
         } else {
             process = new ProcessBuilder(dexdeps, "--format=xml", apkPath).start();
